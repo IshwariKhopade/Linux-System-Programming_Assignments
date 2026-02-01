@@ -17,7 +17,7 @@ int main()
     int (*fp)(int, int);
     int iRet = 0;
 
-    handle = dlopen("./Server1.so", RTLD_LAZY);          //RTLD_LAZY- used to bring library when needed
+    handle = dlopen("./Server.so", RTLD_LAZY);          //RTLD_LAZY- used to bring library when needed
 
     if(handle == NULL)
     {
