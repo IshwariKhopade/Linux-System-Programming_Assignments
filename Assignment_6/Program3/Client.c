@@ -1,0 +1,102 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//  File Name : Client.c
+//  Description : Write program to create a shared library (.so) that contains Arithmetic Functions.
+//                Write client Program that dynamically loads library & calls the required function based on user choice.
+//  Author : Ishwari Bharat Khopade
+//  Date : 02/02/2026
+//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include<stdio.h>
+#include<dlfcn.h>
+#include<stdlib.h>
+
+int main()
+{
+    void *handle = NULL;
+    int (*fp)(int, int);
+    int iRet = 0, option = 0;
+    int No1 = 0, No2 = 0;
+
+    //dlopen loads shared library at runtime
+    handle = dlopen("./Server.so", RTLD_LAZY);          //RTLD_LAZY- used to bring library when needed
+
+    if(handle == NULL)
+    {
+        printf("Error loading the library: %s\n", dlerror());
+        return -1;
+    }
+    printf("Library gets loaded successfully\n");
+
+    printf("Which Arithmetic operation you want to perform?\n 1. Addition\n 2. Subtraction\n 3. Multiplication\n 4. Division\n");
+    scanf("%d", &option);
+
+    printf("Enter 2 Numbers: \n");
+    scanf("%d%d", &No1, &No2);
+
+    switch (option)
+    {
+        case 1:
+            fp = (int(*)(int, int))dlsym(handle, "Addition");    
+            if(fp == NULL)
+            {
+                printf("Unable to get address of function\n");
+                dlclose(handle);
+                return -1;
+            }
+
+            iRet = fp(No1,No2);
+            printf("Addition is: %d\n", iRet);
+            break;
+        
+        case 2:
+            fp = (int(*)(int, int))dlsym(handle, "Subtraction");    
+            if(fp == NULL)
+            {
+                printf("Unable to get address of function\n");
+                dlclose(handle);
+                return -1;
+            }
+
+            iRet = fp(No1,No2);
+            printf("Subtraction is: %d\n", iRet);
+            break;
+
+        case 3:
+            fp = (int(*)(int, int))dlsym(handle, "Multiplication");    
+            if(fp == NULL)
+            {
+                printf("Unable to get address of function\n");
+                dlclose(handle);
+                return -1;
+            }
+
+            iRet = fp(No1,No2);
+            printf("Multiplication is: %d\n", iRet);
+            break;
+        
+        case 4:
+            fp = (int(*)(int, int))dlsym(handle, "Division");    
+            if(fp == NULL)
+            {
+                printf("Unable to get address of function\n");
+                dlclose(handle);
+                return -1;
+            }
+
+            iRet = fp(No1,No2);
+            printf("Division is: %d\n", iRet);
+            break;
+        
+        default:
+            printf("Invalid Choice Selected\n");
+            break;
+
+    }
+
+    dlclose(handle);
+
+    return 0;
+
+}
